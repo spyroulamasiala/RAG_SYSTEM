@@ -1,0 +1,109 @@
+# Default values for typeform-chatbot
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+image:
+  repository: typeform-chatbot  # Replace with your registry
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+
+service:
+  type: LoadBalancer  # ClusterIP, NodePort, or LoadBalancer
+  port: 80
+  targetPort: 8000
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: chatbot.yourdomain.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: chatbot-tls
+      hosts:
+        - chatbot.yourdomain.com
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 1Gi
+  requests:
+    cpu: 250m
+    memory: 512Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 8000
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 8000
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Application configuration
+config:
+  pineconeEnvironment: "gcp-starter"
+  pineconeIndexName: "typeform-help-center"
+  appEnv: "production"
+  logLevel: "INFO"
+  apiPort: "8000"
+  apiHost: "0.0.0.0"
+  embeddingModel: "text-embedding-3-small"
+  llmModel: "gpt-4-turbo-preview"
+  chunkSize: "1000"
+  chunkOverlap: "200"
+  topKResults: "3"
+  maxTokens: "500"
+  temperature: "0.7"
+
+# Secrets (set these via --set or values override file)
+secrets:
+  openaiApiKey: ""
+  pineconeApiKey: ""

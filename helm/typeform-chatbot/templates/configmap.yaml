@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "typeform-chatbot.fullname" . }}-config
+  labels:
+    {{- include "typeform-chatbot.labels" . | nindent 4 }}
+data:
+  PINECONE_ENVIRONMENT: {{ .Values.config.pineconeEnvironment | quote }}
+  PINECONE_INDEX_NAME: {{ .Values.config.pineconeIndexName | quote }}
+  APP_ENV: {{ .Values.config.appEnv | quote }}
+  LOG_LEVEL: {{ .Values.config.logLevel | quote }}
+  API_PORT: {{ .Values.config.apiPort | quote }}
+  API_HOST: {{ .Values.config.apiHost | quote }}
+  EMBEDDING_MODEL: {{ .Values.config.embeddingModel | quote }}
+  LLM_MODEL: {{ .Values.config.llmModel | quote }}
+  CHUNK_SIZE: {{ .Values.config.chunkSize | quote }}
+  CHUNK_OVERLAP: {{ .Values.config.chunkOverlap | quote }}
+  TOP_K_RESULTS: {{ .Values.config.topKResults | quote }}
+  MAX_TOKENS: {{ .Values.config.maxTokens | quote }}
+  TEMPERATURE: {{ .Values.config.temperature | quote }}

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: typeform-chatbot-service
+  namespace: default
+  labels:
+    app: typeform-chatbot
+spec:
+  type: LoadBalancer  # Change to ClusterIP if using Ingress
+  selector:
+    app: typeform-chatbot
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 8000
+  sessionAffinity: None

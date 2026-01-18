@@ -1,0 +1,38 @@
+# WARNING: This file contains placeholder secrets for demonstration purposes.
+# DO NOT commit real API keys to version control!
+# In production:
+# 1. Create secrets using: kubectl create secret generic chatbot-secrets \
+#    --from-literal=OPENAI_API_KEY=<your-key> \
+#    --from-literal=PINECONE_API_KEY=<your-key>
+# 2. Or use a secrets management solution like Vault, AWS Secrets Manager, etc.
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: chatbot-secrets
+  namespace: default
+type: Opaque
+stringData:
+  # Replace these with actual values or use kubectl create secret
+  OPENAI_API_KEY: "REPLACE_WITH_ACTUAL_KEY"
+  PINECONE_API_KEY: "REPLACE_WITH_ACTUAL_KEY"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chatbot-config
+  namespace: default
+data:
+  PINECONE_ENVIRONMENT: "gcp-starter"
+  PINECONE_INDEX_NAME: "typeform-help-center"
+  APP_ENV: "production"
+  LOG_LEVEL: "INFO"
+  API_PORT: "8000"
+  API_HOST: "0.0.0.0"
+  EMBEDDING_MODEL: "text-embedding-3-small"
+  LLM_MODEL: "gpt-4-turbo-preview"
+  CHUNK_SIZE: "1000"
+  CHUNK_OVERLAP: "200"
+  TOP_K_RESULTS: "3"
+  MAX_TOKENS: "500"
+  TEMPERATURE: "0.7"
